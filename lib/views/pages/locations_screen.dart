@@ -33,213 +33,223 @@ class _LocateScreenState extends State<LocateScreen> {
   DateTime? currentBackPressTime;
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () async {
-        setState(() {});
-        viewModel.fetchLocations();
+    return WillPopScope(
+      onWillPop: () {
+        DateTime now = DateTime.now();
 
-        return await 2.seconds.delay;
+        if (currentBackPressTime == null ||
+            now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
+          currentBackPressTime = now;
+          toast('Press back again to exit app"');
+          return Future.value(false);
+        }
+        return Future.value(true);
       },
-      child: WillPopScope(
-        onWillPop: () {
-          DateTime now = DateTime.now();
-
-          if (currentBackPressTime == null ||
-              now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
-            currentBackPressTime = now;
-            toast('Press back again to exit app"');
-            return Future.value(false);
-          }
-          return Future.value(true);
-        },
-        child: Scaffold(
-          body: Stack(
+      child: Scaffold(
+        body: RefreshIndicator(
+          onRefresh: () async {
+            setState(() {});
+            return await 2.seconds.delay;
+          },
+          child: Stack(
             children: [
-              Column(
-                children: [
-                  Container(
-                    height: 200,
-                    decoration: const BoxDecoration(
-                      color: primaryColor,
-                      image: DecorationImage(
-                        image: AssetImage(banner),
-                        fit: BoxFit.cover,
+              SingleChildScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 200,
+                      decoration: const BoxDecoration(
+                        color: primaryColor,
+                        image: DecorationImage(
+                          image: AssetImage(banner),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(30),
+                                bottomRight: Radius.circular(30),
+                                topLeft: Radius.circular(30),
+                                topRight: Radius.circular(30),
+                              ),
+                            ),
+                            width: 350,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 50),
+                              child: TextFormField(
+                                decoration: const InputDecoration(
+                                  hintText: 'what do you want to experience?',
+                                  prefixIcon:
+                                      Icon(Icons.search, color: primaryColor),
+                                  border: InputBorder.none,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(30),
-                              bottomRight: Radius.circular(30),
-                              topLeft: Radius.circular(30),
-                              topRight: Radius.circular(30),
-                            ),
-                          ),
-                          width: 350,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 50),
-                            child: TextFormField(
-                              decoration: const InputDecoration(
-                                hintText: 'what do you want to experience?',
-                                prefixIcon:
-                                    Icon(Icons.search, color: primaryColor),
-                                border: InputBorder.none,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  30.height,
-                  ChangeNotifierProvider<LocationListVM>(
-                    create: (BuildContext context) => viewModel,
-                    child: Consumer<LocationListVM>(
-                        builder: (context, viewModel, _) {
-                      switch (viewModel.LocationMain.status) {
-                        case Status.LOADING:
-                          return LoadingWidget();
-                        case Status.ERROR:
-                          return Column(
-                            children: [
-                              MyErrorWidget(
-                                  viewModel.LocationMain.message ?? "NA"),
-                              10.height,
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  InkWell(
-                                    borderRadius: BorderRadius.circular(18.0),
-                                    child: Container(
-                                      width: 150,
-                                      height: 35,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(),
-                                        borderRadius:
-                                            BorderRadius.circular(18.0),
-                                      ),
-                                      child: const Center(
-                                        child: Text(
-                                          'Retry',
-                                          style: TextStyle(),
-                                        ),
-                                      ),
-                                    ),
-                                    onTap: () {
-                                      viewModel.fetchLocations();
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ],
-                          );
-                        case Status.COMPLETED:
-                          return Expanded(
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Row(
-                                    children: [
-                                      RichTextWidget(
-                                        textAlign: TextAlign.center,
-                                        list: [
-                                          TextSpan(
-                                              text: 'Tours in your area',
-                                              style: boldTextStyle(size: 20)),
-                                          TextSpan(
-                                            text: ' Nahu',
-                                            style: boldTextStyle(
-                                                color: primaryColor, size: 20),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                _getnearbyListView(
-                                    viewModel.LocationMain.data?.nearby),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                    30.height,
+                    Column(children: [
+                      Container(
+                        child: ChangeNotifierProvider<LocationListVM>(
+                          create: (BuildContext context) => viewModel,
+                          child: Consumer<LocationListVM>(
+                              builder: (context, viewModel, _) {
+                            switch (viewModel.LocationMain.status) {
+                              case Status.LOADING:
+                                return LoadingWidget();
+                              case Status.ERROR:
+                                return Column(
                                   children: [
-                                    InkWell(
-                                      borderRadius: BorderRadius.circular(18.0),
-                                      child: Container(
-                                        width: 150,
-                                        height: 35,
-                                        decoration: BoxDecoration(
-                                          border: Border.all(),
+                                    MyErrorWidget(
+                                        viewModel.LocationMain.message ?? "NA"),
+                                    10.height,
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        InkWell(
                                           borderRadius:
                                               BorderRadius.circular(18.0),
-                                        ),
-                                        child: const Center(
-                                          child: Text(
-                                            'LOAD MORE',
-                                            style: TextStyle(),
+                                          child: Container(
+                                            width: 150,
+                                            height: 35,
+                                            decoration: BoxDecoration(
+                                              border: Border.all(),
+                                              borderRadius:
+                                                  BorderRadius.circular(18.0),
+                                            ),
+                                            child: const Center(
+                                              child: Text(
+                                                'Retry',
+                                                style: TextStyle(),
+                                              ),
+                                            ),
                                           ),
+                                          onTap: () {
+                                            viewModel.fetchLocations();
+                                          },
                                         ),
-                                      ),
-                                      onTap: () {
-                                        setState(() {
-                                          _itemCount += 2;
-                                        });
-                                      },
+                                      ],
                                     ),
                                   ],
-                                ),
-                              ],
-                            ),
-                          );
-                        default:
-                      }
-                      return Container();
-                    }),
-                  ),
-                  ChangeNotifierProvider<LocationListVM>(
-                    create: (BuildContext context) => viewModel,
-                    child: Consumer<LocationListVM>(
-                        builder: (context, viewModel, _) {
-                      switch (viewModel.LocationMain.status) {
-                        case Status.COMPLETED:
-                          return Expanded(
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Row(
-                                    children: [
-                                      RichTextWidget(
-                                        textAlign: TextAlign.center,
-                                        list: [
-                                          TextSpan(
-                                              text: 'Popular',
-                                              style: boldTextStyle(
-                                                  size: 20,
-                                                  color: primaryColor)),
-                                          TextSpan(
-                                            text: ' Tour',
-                                            style: boldTextStyle(size: 20),
+                                );
+                              case Status.COMPLETED:
+                                return Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Row(
+                                        children: [
+                                          RichTextWidget(
+                                            textAlign: TextAlign.center,
+                                            list: [
+                                              TextSpan(
+                                                  text: 'Tours in your area',
+                                                  style:
+                                                      boldTextStyle(size: 20)),
+                                              TextSpan(
+                                                text: ' Nahu',
+                                                style: boldTextStyle(
+                                                    color: primaryColor,
+                                                    size: 20),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
-                                    ],
-                                  ),
-                                ),
-                                _getpopularListView(
-                                    viewModel.LocationMain.data?.popular),
-                              ],
-                            ),
-                          );
-                        default:
-                      }
-                      return Container();
-                    }),
-                  ),
-                ],
+                                    ),
+                                    _getnearbyListView(
+                                        viewModel.LocationMain.data?.nearby),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        InkWell(
+                                          borderRadius:
+                                              BorderRadius.circular(18.0),
+                                          child: Container(
+                                            width: 150,
+                                            height: 35,
+                                            decoration: BoxDecoration(
+                                              border: Border.all(),
+                                              borderRadius:
+                                                  BorderRadius.circular(18.0),
+                                            ),
+                                            child: const Center(
+                                              child: Text(
+                                                'LOAD MORE',
+                                                style: TextStyle(),
+                                              ),
+                                            ),
+                                          ),
+                                          onTap: () {
+                                            setState(() {
+                                              _itemCount += 2;
+                                            });
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                );
+                              default:
+                            }
+                            return Container();
+                          }),
+                        ),
+                      ),
+                      Container(
+                        child: ChangeNotifierProvider<LocationListVM>(
+                          create: (BuildContext context) => viewModel,
+                          child: Consumer<LocationListVM>(
+                              builder: (context, viewModel, _) {
+                            switch (viewModel.LocationMain.status) {
+                              case Status.COMPLETED:
+                                return Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Row(
+                                        children: [
+                                          RichTextWidget(
+                                            textAlign: TextAlign.center,
+                                            list: [
+                                              TextSpan(
+                                                  text: 'Popular',
+                                                  style: boldTextStyle(
+                                                      size: 20,
+                                                      color: primaryColor)),
+                                              TextSpan(
+                                                text: ' Tour',
+                                                style: boldTextStyle(size: 20),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    _getpopularListView(
+                                        viewModel.LocationMain.data?.popular),
+                                  ],
+                                );
+                              default:
+                            }
+                            return Container();
+                          }),
+                        ),
+                      ),
+                    ]),
+                  ],
+                ),
               ),
             ],
           ),
@@ -249,29 +259,29 @@ class _LocateScreenState extends State<LocateScreen> {
   }
 
   Widget _getnearbyListView(List<Nearby>? nearbyList) {
-    return Expanded(
-      child: ListView.builder(
-          itemCount: nearbyList?.length == 0 || nearbyList?.length == 1
-              ? nearbyList?.length
-              : _itemCount,
-          itemBuilder: (context, position) {
-            if (position % 2 == 0 && position + 1 < nearbyList!.length) {
-              return _getNearbyListItem(nearbyList[position]);
-            } else {
-              return _getNearbyListItem(nearbyList![position]);
-            }
-          }),
-    );
+    return ListView.builder(
+        itemCount: nearbyList?.length == 0 || nearbyList?.length == 1
+            ? nearbyList?.length
+            : _itemCount,
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemBuilder: (context, position) {
+          if (position % 2 == 0 && position + 1 < nearbyList!.length) {
+            return _getNearbyListItem(nearbyList[position]);
+          } else {
+            return _getNearbyListItem(nearbyList![position]);
+          }
+        });
   }
 
   Widget _getpopularListView(List<Popular>? popularList) {
-    return Expanded(
-      child: ListView.builder(
-          itemCount: popularList?.length,
-          itemBuilder: (context, position) {
-            return _getpopularListItem(popularList![position]);
-          }),
-    );
+    return ListView.builder(
+        itemCount: popularList?.length,
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemBuilder: (context, position) {
+          return _getpopularListItem(popularList![position]);
+        });
   }
 
   Widget _getNearbyListItem(Nearby item) {
@@ -397,33 +407,42 @@ class _LocateScreenState extends State<LocateScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      8.width,
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(30.0),
-                        child: cachedImage(
-                          item.author!.img,
-                          fit: BoxFit.cover,
-                          width: 18,
-                          height: 18,
-                        ),
+                      Container(
+                        child: Row(children: [
+                          8.width,
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(30.0),
+                            child: cachedImage(
+                              item.author!.img,
+                              fit: BoxFit.cover,
+                              width: 18,
+                              height: 18,
+                            ),
+                          ),
+                          5.width,
+                          Text('${item.author!.userName}',
+                              style: boldTextStyle(size: 15)),
+                          20.width,
+                        ]),
                       ),
-                      5.width,
-                      Text('${item.author!.userName}',
-                          style: boldTextStyle(size: 15)),
-                      20.width,
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(30.0),
-                        child: cachedImage(
-                          placeholder3,
-                          fit: BoxFit.cover,
-                          width: 18,
-                          height: 18,
-                        ),
+                      Container(
+                        child: Row(children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(30.0),
+                            child: cachedImage(
+                              placeholder3,
+                              fit: BoxFit.cover,
+                              width: 18,
+                              height: 18,
+                            ),
+                          ),
+                          5.width,
+                          star.iconImage(color: primaryColor, size: 20),
+                          5.width,
+                          Text('${item.rating}',
+                              style: boldTextStyle(size: 15)),
+                        ]),
                       ),
-                      5.width,
-                      star.iconImage(color: primaryColor, size: 20),
-                      5.width,
-                      Text('${item.rating}', style: boldTextStyle(size: 15)),
                     ],
                   ),
                   8.height,
