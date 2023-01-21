@@ -16,3 +16,4 @@ const placeholder = 'assets/images/app_images/placeholder.png';
 const placeholder2 = 'assets/images/app_images/placeholder2.jpg';
 const placeholder3 = 'assets/images/app_images/placeholder3.png';
 const notDataFoundImg = 'assets/images/app_images/no_data_found.png';
+const logo = 'assets/images/app_images/logo.png';

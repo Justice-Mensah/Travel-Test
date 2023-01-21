@@ -70,25 +70,28 @@ class _LocateScreenState extends State<LocateScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Container(
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(30),
-                                bottomRight: Radius.circular(30),
-                                topLeft: Radius.circular(30),
-                                topRight: Radius.circular(30),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 50.0),
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                color: cardColor,
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(30),
+                                  bottomRight: Radius.circular(30),
+                                  topLeft: Radius.circular(30),
+                                  topRight: Radius.circular(30),
+                                ),
                               ),
-                            ),
-                            width: 350,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 50),
-                              child: TextFormField(
-                                decoration: const InputDecoration(
-                                  hintText: 'what do you want to experience?',
-                                  prefixIcon:
-                                      Icon(Icons.search, color: primaryColor),
-                                  border: InputBorder.none,
+                              width: 350,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 50),
+                                child: TextFormField(
+                                  decoration: const InputDecoration(
+                                    hintText: 'what do you want to experience?',
+                                    prefixIcon:
+                                        Icon(Icons.search, color: primaryColor),
+                                    border: InputBorder.none,
+                                  ),
                                 ),
                               ),
                             ),
@@ -169,6 +172,7 @@ class _LocateScreenState extends State<LocateScreen> {
                                     ),
                                     _getnearbyListView(
                                         viewModel.LocationMain.data?.nearby),
+                                    20.height,
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -199,6 +203,7 @@ class _LocateScreenState extends State<LocateScreen> {
                                         ),
                                       ],
                                     ),
+                                    20.height,
                                   ],
                                 );
                               default:
@@ -285,15 +290,16 @@ class _LocateScreenState extends State<LocateScreen> {
   }
 
   Widget _getNearbyListItem(Nearby item) {
-    return Column(children: [
-      GestureDetector(
-        onTap: () {},
+    return Container(
+      width: context.width(),
+      child: GestureDetector(
         child: Padding(
           padding: const EdgeInsets.only(left: 16),
-          child: Row(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   cachedImage(
                     '',
@@ -301,180 +307,204 @@ class _LocateScreenState extends State<LocateScreen> {
                     width: 80,
                     height: 80,
                   ).cornerRadiusWithClipRRect(defaultRadius),
-                ],
-              ),
-              10.width,
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+                  10.width,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      8.width,
-                      Text('${item.name}', style: boldTextStyle(size: 18)),
-                    ],
-                  ),
-                  8.height,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      8.width,
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(30.0),
-                        child: cachedImage(
-                          item.author?.img,
-                          fit: BoxFit.cover,
-                          width: 18,
-                          height: 18,
+                      Row(
+                        children: [
+                          8.width,
+                          Text('${item.name}', style: boldTextStyle(size: 18)),
+                        ],
+                      ),
+                      8.height,
+                      Padding(
+                        padding: const EdgeInsets.only(right: 50),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              child: Row(children: [
+                                8.width,
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  child: cachedImage(
+                                    item.author!.img,
+                                    fit: BoxFit.cover,
+                                    width: 18,
+                                    height: 18,
+                                  ),
+                                ),
+                                5.width,
+                                Text('${item.author!.userName}',
+                                    style: boldTextStyle(size: 15)),
+                                20.width,
+                              ]),
+                            ),
+                            Container(
+                              child: Row(children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  child: cachedImage(
+                                    placeholder3,
+                                    fit: BoxFit.cover,
+                                    width: 18,
+                                    height: 18,
+                                  ),
+                                ),
+                                5.width,
+                                star.iconImage(color: primaryColor, size: 20),
+                                5.width,
+                                Text('${item.rating}',
+                                    style: boldTextStyle(size: 15)),
+                              ]),
+                            ),
+                          ],
                         ),
                       ),
-                      5.width,
-                      Text('${item.author?.userName}',
-                          style: boldTextStyle(size: 15)),
-                      20.width,
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(30.0),
-                        child: cachedImage(
-                          placeholder3,
-                          fit: BoxFit.cover,
-                          width: 18,
-                          height: 18,
-                        ),
+                      8.height,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          8.width,
+                          coins.iconImage(size: 20),
+                          5.width,
+                          Text('${item.price} €',
+                              style: boldTextStyle(size: 15)),
+                          8.width,
+                          alarm.iconImage(size: 20),
+                          5.width,
+                          Text('${item.duration} m',
+                              style: boldTextStyle(size: 15)),
+                          5.width,
+                          arrow.iconImage(size: 20),
+                          5.width,
+                          Text('${item.distance} km',
+                              style: boldTextStyle(size: 15)),
+                          24.width,
+                        ],
                       ),
-                      5.width,
-                      star.iconImage(color: primaryColor, size: 20),
-                      5.width,
-                      Text('0.0(0)', style: boldTextStyle(size: 15)),
+                      const Divider(
+                        color: appTextSecondaryColor,
+                      ),
                     ],
-                  ),
-                  8.height,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      8.width,
-                      coins.iconImage(size: 20),
-                      5.width,
-                      Text('${item.price} €', style: boldTextStyle(size: 15)),
-                      8.width,
-                      alarm.iconImage(size: 20),
-                      5.width,
-                      Text('${item.duration} m',
-                          style: boldTextStyle(size: 15)),
-                      5.width,
-                      arrow.iconImage(size: 20),
-                      5.width,
-                      Text('${item.distance} km',
-                          style: boldTextStyle(size: 15)),
-                    ],
-                  ),
-                  const Divider(
-                    thickness: 0.9,
-                    color: Colors.black,
-                  ),
+                  ).flexible(),
                 ],
               ),
             ],
           ),
         ),
       ),
-    ]);
+    );
   }
 
   Widget _getpopularListItem(Popular item) {
-    return Column(children: [
-      GestureDetector(
+    return Container(
+      width: context.width(),
+      child: GestureDetector(
         child: Padding(
           padding: const EdgeInsets.only(left: 16),
-          child: Row(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              cachedImage(
-                '',
-                fit: BoxFit.cover,
-                width: 80,
-                height: 80,
-              ).cornerRadiusWithClipRRect(defaultRadius),
-              10.width,
-              Column(
+              Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
+                  cachedImage(
+                    '',
+                    fit: BoxFit.cover,
+                    width: 80,
+                    height: 80,
+                  ).cornerRadiusWithClipRRect(defaultRadius),
+                  10.width,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      8.width,
-                      Text('${item.name}', style: boldTextStyle(size: 18)),
-                    ],
-                  ),
-                  8.height,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        child: Row(children: [
+                      Row(
+                        children: [
                           8.width,
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(30.0),
-                            child: cachedImage(
-                              item.author!.img,
-                              fit: BoxFit.cover,
-                              width: 18,
-                              height: 18,
-                            ),
-                          ),
-                          5.width,
-                          Text('${item.author!.userName}',
-                              style: boldTextStyle(size: 15)),
-                          20.width,
-                        ]),
+                          Text('${item.name}', style: boldTextStyle(size: 18)),
+                        ],
                       ),
-                      Container(
-                        child: Row(children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(30.0),
-                            child: cachedImage(
-                              placeholder3,
-                              fit: BoxFit.cover,
-                              width: 18,
-                              height: 18,
+                      8.height,
+                      Padding(
+                        padding: const EdgeInsets.only(right: 50),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              child: Row(children: [
+                                8.width,
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  child: cachedImage(
+                                    item.author!.img,
+                                    fit: BoxFit.cover,
+                                    width: 18,
+                                    height: 18,
+                                  ),
+                                ),
+                                5.width,
+                                Text('${item.author!.userName}',
+                                    style: boldTextStyle(size: 15)),
+                                20.width,
+                              ]),
                             ),
-                          ),
+                            Container(
+                              child: Row(children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  child: cachedImage(
+                                    placeholder3,
+                                    fit: BoxFit.cover,
+                                    width: 18,
+                                    height: 18,
+                                  ),
+                                ),
+                                5.width,
+                                star.iconImage(color: primaryColor, size: 20),
+                                5.width,
+                                Text('${item.rating}',
+                                    style: boldTextStyle(size: 15)),
+                              ]),
+                            ),
+                          ],
+                        ),
+                      ),
+                      8.height,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          8.width,
+                          coins.iconImage(size: 20),
                           5.width,
-                          star.iconImage(color: primaryColor, size: 20),
-                          5.width,
-                          Text('${item.rating}',
+                          Text('${item.price} €',
                               style: boldTextStyle(size: 15)),
-                        ]),
+                          8.width,
+                          alarm.iconImage(size: 20),
+                          5.width,
+                          Text('${item.duration} m',
+                              style: boldTextStyle(size: 15)),
+                          5.width,
+                          arrow.iconImage(size: 20),
+                          5.width,
+                          Text('${item.distance} km',
+                              style: boldTextStyle(size: 15)),
+                          24.width,
+                        ],
+                      ),
+                      const Divider(
+                        color: appTextSecondaryColor,
                       ),
                     ],
-                  ),
-                  8.height,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      8.width,
-                      coins.iconImage(size: 20),
-                      5.width,
-                      Text('${item.price} €', style: boldTextStyle(size: 15)),
-                      8.width,
-                      alarm.iconImage(size: 20),
-                      5.width,
-                      Text('${item.duration} m',
-                          style: boldTextStyle(size: 15)),
-                      5.width,
-                      arrow.iconImage(size: 20),
-                      5.width,
-                      Text('${item.distance} km',
-                          style: boldTextStyle(size: 15)),
-                    ],
-                  ),
-                  const Divider(
-                    thickness: 0.9,
-                    color: Colors.black,
-                  ),
+                  ).flexible()
                 ],
               ),
+              16.height
             ],
           ),
         ),
       ),
-    ]);
+    );
   }
 }

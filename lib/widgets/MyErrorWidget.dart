@@ -21,14 +21,3 @@ class MyErrorWidget extends StatelessWidget {
     );
   }
 }
-
-// Widget noDataFound(BuildContext context) {
-//   return Column(
-//     mainAxisAlignment: MainAxisAlignment.center,
-//     children: [
-//       cachedImage(notDataFoundImg, height: 200, width: 200),
-//       8.height,
-//       Text($msg, style: boldTextStyle()),
-//     ],
-//   );
-// }
