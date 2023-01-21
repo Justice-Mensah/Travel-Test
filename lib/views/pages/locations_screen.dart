@@ -48,7 +48,9 @@ class _LocateScreenState extends State<LocateScreen> {
       child: Scaffold(
         body: RefreshIndicator(
           onRefresh: () async {
-            setState(() {});
+            setState(() {
+              viewModel.fetchLocations();
+            });
             return await 2.seconds.delay;
           },
           child: Stack(
