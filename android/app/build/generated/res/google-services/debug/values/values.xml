@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">897063853026-5nqo2eje5in1eut1lndnlbpg5121ua51.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">897063853026</string>
+    <string name="google_api_key" translatable="false">AIzaSyD9k0RXrodY0UOFi2WUufJiWNR3uyzuH6A</string>
+    <string name="google_app_id" translatable="false">1:897063853026:android:1b715ba56fb50487b2b7bb</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyD9k0RXrodY0UOFi2WUufJiWNR3uyzuH6A</string>
+    <string name="google_storage_bucket" translatable="false">icag-sms.appspot.com</string>
+    <string name="project_id" translatable="false">icag-sms</string>
+</resources>

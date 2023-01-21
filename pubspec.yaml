@@ -1,0 +1,32 @@
+name: traveling
+description: A new Flutter project.
+
+publish_to: "none"
+
+version: 1.0.0
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.4
+  nb_utils: ^4.6.0
+  google_fonts: ^3.0.1
+  adaptive_theme: ^3.1.1
+  cached_network_image: ^3.2.3
+  provider: ^6.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/images/icons/
+    - assets/images/flag/
+    - assets/images/app_images/
