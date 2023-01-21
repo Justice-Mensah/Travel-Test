@@ -32,6 +32,7 @@ Widget cachedImage(
   bool usePlaceholderIfUrlEmpty = true,
 }) {
   if (url!.validate().isEmpty) {
+    print("me");
     return placeHolderWidget(
         placeHolderImage: placeHolderImage,
         height: height,
@@ -39,6 +40,8 @@ Widget cachedImage(
         fit: fit,
         alignment: alignment);
   } else if (url.validate().startsWith('http')) {
+    print("me 2");
+
     return CachedNetworkImage(
       imageUrl: url,
       height: height,
@@ -56,6 +59,8 @@ Widget cachedImage(
       },
     );
   } else {
+    print(url);
+
     return Image.asset(
       url,
       height: height,

@@ -251,7 +251,9 @@ class _LocateScreenState extends State<LocateScreen> {
   Widget _getnearbyListView(List<Nearby>? nearbyList) {
     return Expanded(
       child: ListView.builder(
-          itemCount: nearbyList?.length,
+          itemCount: nearbyList?.length == 0 || nearbyList?.length == 1
+              ? nearbyList?.length
+              : _itemCount,
           itemBuilder: (context, position) {
             if (position % 2 == 0 && position + 1 < nearbyList!.length) {
               return _getNearbyListItem(nearbyList[position]);
