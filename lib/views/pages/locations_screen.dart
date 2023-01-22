@@ -386,6 +386,7 @@ class _LocateScreenState extends State<LocateScreen> {
                           24.width,
                         ],
                       ),
+                      16.height,
                       const Divider(
                         color: appTextSecondaryColor,
                       ),
@@ -495,6 +496,7 @@ class _LocateScreenState extends State<LocateScreen> {
                           24.width,
                         ],
                       ),
+                      16.height,
                       const Divider(
                         color: appTextSecondaryColor,
                       ),
